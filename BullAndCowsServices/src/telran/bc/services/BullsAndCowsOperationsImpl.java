@@ -5,9 +5,13 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
+import telran.bc.dto.Competition;
+import telran.bc.dto.CompetitionCode;
 import telran.bc.dto.Game;
 import telran.bc.dto.Move;
 import telran.bc.dto.MoveData;
@@ -24,6 +28,8 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 	private static final String filePath = "BCGameData.data";
 	private HashMap<Long, User> users = new HashMap<>();
 	private HashMap<User, Game> currentGames = new HashMap<>();
+	private TreeMap<Instant, Competition> competitions = new TreeMap<>();
+	CompetitionService competitionService = new CompetitionService();
 	public static BullsAndCowsOperations getBullsAndCowsGame(String filePath) {
 		try (ObjectInputStream reader = new ObjectInputStream(new FileInputStream(filePath))) {
 			BullsAndCowsOperationsImpl res = (BullsAndCowsOperationsImpl) reader.readObject();
@@ -32,20 +38,12 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 			return new BullsAndCowsOperationsImpl();
 		}
 	}
-	
-	public void clearCurrentGames() {
-		//TODO
-	}
-	
-	public void deleteGame(User user) {
-		//TODO
-	}
-	
+
 	@Override
 	public boolean currentGameIsActive(long userId) {
 		User currentUser = users.get(userId);
 		Game game = currentGames.get(currentUser);
-		if(game==null) {
+		if (game == null) {
 			return false;
 		}
 		return game.isActive();
@@ -66,7 +64,7 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 		}
 		return UserCodes.OK;
 	}
-	
+
 	public UserCodes checkUser(long userId) {
 		User user = users.get(userId);
 		if (user == null) {
@@ -84,8 +82,8 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 		}
 		Game game = currentGames.get(currentUser);
 		if (game != null && game.isActive()) {
-			throw new IllegalArgumentException("This user in not finished game. Game ID - "
-					+ currentGames.get(currentUser).getGameId());
+			throw new IllegalArgumentException(
+					"This user in not finished game. Game ID - " + currentGames.get(currentUser).getGameId());
 		}
 
 		game = currentUser.startGame();
@@ -109,23 +107,24 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 			throw new IllegalArgumentException("Game is not active");
 		}
 		game.addMove(number);
-		
+
+		try {
+			save(filePath);
+		} catch (Exception e) {
+			System.out.println("didn't saved");
+			System.out.println(e.getMessage());
+		}
+
+		if (!game.isActive()) {
 			try {
-				save(filePath);
+				currentUser.saveGame(game, getSavePath());
+				Thread.currentThread().sleep(1);
 			} catch (Exception e) {
-				System.out.println("didn't saved");
+				System.out.println("didn't save game ID-" + game.getGameId());
 				System.out.println(e.getMessage());
 			}
-			
-			if (!game.isActive()) {
-				try {
-					currentUser.saveGame(game, getSavePath());
-				} catch(Exception e) {
-					System.out.println("didn't save game ID-" + game.getGameId());
-					System.out.println(e.getMessage());
-				}
-			}
-		
+		}
+
 		return game.getMoves();
 	}
 
@@ -139,11 +138,8 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 		if (user == null) {
 			throw new IllegalArgumentException("User is not exists");
 		}
-		SearchGameDataResponce res = new SearchGameDataResponce(
-					user.getId(),
-					user.getName(),
-					user.getGames(gameData.from, gameData.to)
-				);
+		SearchGameDataResponce res = new SearchGameDataResponce(user.getId(), user.getName(),
+				user.getGames(gameData.from, gameData.to));
 		return res;
 	}
 
@@ -153,6 +149,39 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 			writer.writeObject(this);
 			System.out.println("game data was been saved");
 		}
+	}
+	
+	// server's methods
+	
+	public void clearCurrentGames() {
+		currentGames.entrySet().forEach(e -> e.getValue().finishGame());
+		currentGames = new HashMap<>();
+	}
+
+	public void deleteGame(User user) {
+		currentGames.get(user).finishGame();
+		currentGames.remove(user);
+	}
+
+	public CompetitionCode createNewCompetition(Instant startAt, Instant finishAt, 
+			String resultsPath, int maxGameDuration) {
+		
+		long startAtSeconds = startAt.getEpochSecond();
+		long finishAtSeconds = finishAt.getEpochSecond();
+		
+		if(startAtSeconds>finishAtSeconds) {
+			throw new IllegalArgumentException("startAt cannot be more than finishAt");
+		}
+		if(startAtSeconds>Instant.now().getEpochSecond()) {
+			throw new IllegalArgumentException("startAt cannot be more than time now");
+		}
+		
+		Competition comp = new Competition(startAtSeconds, finishAtSeconds, resultsPath,
+				maxGameDuration);
+		var res = competitions.putIfAbsent(finishAt, comp);
+		competitionService.createCompititionSwitchers(comp, this);
+		return res == null ? CompetitionCode.CREATED : CompetitionCode.ALREADY_EXISTS;
+
 	}
 
 }

@@ -41,8 +41,7 @@ public class BullAndCowsConsoleAppl {
 			try {
 				menu.perform(io);
 			} catch (EndOfInputException e1) {
-				io.writeObjectLine("Good bye");
-
+				io.writeObjectLine("Good by");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

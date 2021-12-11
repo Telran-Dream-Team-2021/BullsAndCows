@@ -29,4 +29,20 @@ public class Competition {
 	public boolean isOnCompetition(long id) {
 		return users.contains(id);
 	}
+	
+	public long getStartAt() {
+		return startAt;
+	}
+
+	public long getFinishAt() {
+		return finishAt;
+	}
+
+	public String getResultsPath() {
+		return resultsPath;
+	}
+
+	public int getMaxGameDuration() {
+		return maxGameDuration;
+	}
 }
