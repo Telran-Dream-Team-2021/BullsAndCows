@@ -33,6 +33,14 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 		}
 	}
 	
+	public void clearCurrentGames() {
+		//TODO
+	}
+	
+	public void deleteGame(User user) {
+		//TODO
+	}
+	
 	@Override
 	public boolean currentGameIsActive(long userId) {
 		User currentUser = users.get(userId);
@@ -111,7 +119,7 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 			
 			if (!game.isActive()) {
 				try {
-					currentUser.saveGame(game);
+					currentUser.saveGame(game, getSavePath());
 				} catch(Exception e) {
 					System.out.println("didn't save game ID-" + game.getGameId());
 					System.out.println(e.getMessage());
@@ -119,6 +127,10 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 			}
 		
 		return game.getMoves();
+	}
+
+	private String getSavePath() {
+		return null;
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 import java.io.Console;
 import java.io.IOException;
 import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -63,6 +64,9 @@ public class Test {
 //				.boxed()
 //				.map(n->Integer.toString(n))
 //				.collect(Collectors.joining()));
+		Instant time = Instant.now();
+		long t = time.toEpochMilli();
+		System.out.println(Instant.now().getEpochSecond());
 
 	}
 
