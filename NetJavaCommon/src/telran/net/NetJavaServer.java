@@ -27,6 +27,16 @@ public abstract class NetJavaServer extends Thread{
 		return sockets.add(socket);
 	}
 	
+	public boolean removeSocket(Socket socket) {
+		try {
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return sockets.remove(socket);
+	}
+	
 	
 	public static void kickAllSokets() {
 		sockets.forEach(s->{
