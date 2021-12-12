@@ -79,16 +79,12 @@ public class BullsAndCowsServerAppl {
 		return io.readString("Enter path of competition's results");
 	}
 
-	private static Instant getStartAt(InputOutput io) {
-		LocalDateTime localDateTime = io.readDate("Enter start of competition - [yyyy-MM-dd HH:mm]", "yyyy-MM-dd HH:mm");
-		Instant res = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
-		return res;
+	private static LocalDateTime getStartAt(InputOutput io) {
+		return io.readDate("Enter start of competition - [yyyy-MM-dd HH:mm]", "yyyy-MM-dd HH:mm");
 	}
 	
-	private static Instant getFinishAt(InputOutput io) {
-		LocalDateTime localDateTime = io.readDate("Enter finish of competition - [yyyy-MM-dd HH:mm]", "yyyy-MM-dd HH:mm");
-		Instant res = localDateTime.atZone(ZoneId.systemDefault()).toInstant();
-		return res;
+	private static LocalDateTime getFinishAt(InputOutput io) {
+		return io.readDate("Enter finish of competition - [yyyy-MM-dd HH:mm]", "yyyy-MM-dd HH:mm");
 	}
 	
 	

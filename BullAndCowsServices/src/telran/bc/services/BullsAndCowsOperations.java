@@ -1,9 +1,7 @@
 package telran.bc.services;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import telran.bc.dto.CompetitionCode;
 import telran.bc.dto.Move;
@@ -21,7 +19,7 @@ public interface BullsAndCowsOperations{
 	void save(String filePath) throws Exception;
 	public boolean currentGameIsActive(long userId) throws Exception;
 	public UserCodes checkUser(long userId) throws Exception;
-	public CompetitionCode createNewCompetition(Instant startAt, Instant finishAt, 
+	public CompetitionCode createNewCompetition(LocalDateTime startAt, LocalDateTime finishAt, 
 			String resultsPath, int maxGameDuration);
 	public void clearCurrentGames();
 	public void deleteGame(User user);

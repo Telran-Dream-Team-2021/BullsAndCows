@@ -5,6 +5,7 @@ import static telran.bc.api.RequestTypesApi.*;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 
 import telran.bc.dto.CompetitionCode;
@@ -23,7 +24,6 @@ public class BullsAndCowsProxeNetJava implements BullsAndCowsOperations{
 	NetJavaClient protocol;
 
 	public BullsAndCowsProxeNetJava(NetJavaClient protocol) throws Exception {
-//		super(host, port);
 		this.protocol = protocol;
 	}
 
@@ -66,7 +66,7 @@ public class BullsAndCowsProxeNetJava implements BullsAndCowsOperations{
 	}
 
 	@Override
-	public CompetitionCode createNewCompetition(Instant startAt, Instant finishAt, String resultsPath,
+	public CompetitionCode createNewCompetition(LocalDateTime startAt, LocalDateTime finishAt, String resultsPath,
 			int maxGameDuration) {
 		// TODO Auto-generated method stub
 		return null;
@@ -93,7 +93,4 @@ public class BullsAndCowsProxeNetJava implements BullsAndCowsOperations{
 	public CompetitionCode registerToCompetition(long userId, LocalDateTime localDateTime) throws Exception {
 		return protocol.send(REGISTRATION_TO_COMPETITION, new RegistrationToCompetitionData(userId, localDateTime));
 	}
-
-	
-
 }
