@@ -1,18 +1,16 @@
 package telran.bc.net;
 
-import static telran.bc.api.RequestTypesApi.CHECK_USER;
-import static telran.bc.api.RequestTypesApi.GAME_ACTIVE;
-import static telran.bc.api.RequestTypesApi.MOVE;
-import static telran.bc.api.RequestTypesApi.REGISTRATION;
-import static telran.bc.api.RequestTypesApi.SEARCH_GAMES;
-import static telran.bc.api.RequestTypesApi.START;
+import static telran.bc.api.RequestTypesApi.*;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import telran.bc.dto.CompetitionCode;
 import telran.bc.dto.Move;
 import telran.bc.dto.MoveData;
+import telran.bc.dto.RegistrationToCompetitionData;
 import telran.bc.dto.SearchGameDataRequest;
 import telran.bc.dto.SearchGameDataResponce;
 import telran.bc.dto.User;
@@ -22,7 +20,6 @@ import telran.net.NetJavaClient;
 import telran.net.UdpJavaClient;
 
 public class BullsAndCowsProxeNetJava implements BullsAndCowsOperations{
-
 	NetJavaClient protocol;
 
 	public BullsAndCowsProxeNetJava(NetJavaClient protocol) throws Exception {
@@ -67,5 +64,36 @@ public class BullsAndCowsProxeNetJava implements BullsAndCowsOperations{
 	public UserCodes checkUser(long userId) throws Exception {
 		return protocol.send(CHECK_USER, userId);
 	}
+
+	@Override
+	public CompetitionCode createNewCompetition(Instant startAt, Instant finishAt, String resultsPath,
+			int maxGameDuration) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void clearCurrentGames() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteGame(User user) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ArrayList<LocalDateTime> getAllCompetitions() throws Exception {
+		return protocol.send(COMPETITIONS, "");
+	}
+
+	@Override
+	public CompetitionCode registerToCompetition(long userId, LocalDateTime localDateTime) throws Exception {
+		return protocol.send(REGISTRATION_TO_COMPETITION, new RegistrationToCompetitionData(userId, localDateTime));
+	}
+
+	
 
 }

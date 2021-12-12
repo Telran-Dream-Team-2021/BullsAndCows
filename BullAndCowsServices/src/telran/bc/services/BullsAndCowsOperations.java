@@ -1,6 +1,7 @@
 package telran.bc.services;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -24,4 +25,6 @@ public interface BullsAndCowsOperations{
 			String resultsPath, int maxGameDuration);
 	public void clearCurrentGames();
 	public void deleteGame(User user);
+	public ArrayList<LocalDateTime> getAllCompetitions() throws Exception;
+	public CompetitionCode registerToCompetition(long userId, LocalDateTime localDateTime) throws Exception;
 }

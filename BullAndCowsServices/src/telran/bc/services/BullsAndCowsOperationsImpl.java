@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
@@ -21,9 +22,6 @@ import telran.bc.dto.User;
 import telran.bc.dto.UserCodes;
 
 public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Serializable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private static final String filePath = "BCGameData.data";
 	private HashMap<Long, User> users = new HashMap<>();
@@ -183,5 +181,17 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 		return res == null ? CompetitionCode.CREATED : CompetitionCode.ALREADY_EXISTS;
 
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public ArrayList<LocalDateTime> getAllCompetitions() {
+		return new ArrayList(competitions.keySet().stream().filter(k -> k.compareTo(LocalDateTime.now()) > 0).toList());
+	}
+
+	@Override
+	public CompetitionCode registerToCompetition(long userId, LocalDateTime localDateTime) throws Exception {
+		return competitions.get(localDateTime).registerUser(userId);
+	}
+
 
 }
