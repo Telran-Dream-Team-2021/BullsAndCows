@@ -1,6 +1,7 @@
 package telran.bc.net;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import telran.bc.dto.CompetitionCode;
@@ -58,13 +59,6 @@ public class BullAndCowsProxeTcpJava extends TcpJavaClient implements BullsAndCo
 	}
 
 	@Override
-	public CompetitionCode createNewCompetition(Instant startAt, Instant finishAt, String resultsPath,
-			int maxGameDuration) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void clearCurrentGames() {
 		// TODO Auto-generated method stub
 		
@@ -74,6 +68,13 @@ public class BullAndCowsProxeTcpJava extends TcpJavaClient implements BullsAndCo
 	public void deleteGame(User user) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public CompetitionCode createNewCompetition(LocalDateTime startAt, LocalDateTime finishAt, String resultsPath,
+			int maxGameDuration) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

@@ -5,7 +5,9 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
@@ -28,7 +30,7 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 	private static final String filePath = "BCGameData.data";
 	private HashMap<Long, User> users = new HashMap<>();
 	private HashMap<User, Game> currentGames = new HashMap<>();
-	private TreeMap<Instant, Competition> competitions = new TreeMap<>();
+	private TreeMap<LocalDateTime, Competition> competitions = new TreeMap<>();
 	CompetitionService competitionService = new CompetitionService();
 	public static BullsAndCowsOperations getBullsAndCowsGame(String filePath) {
 		try (ObjectInputStream reader = new ObjectInputStream(new FileInputStream(filePath))) {
@@ -163,16 +165,16 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 		currentGames.remove(user);
 	}
 
-	public CompetitionCode createNewCompetition(Instant startAt, Instant finishAt, 
+	public CompetitionCode createNewCompetition(LocalDateTime startAt, LocalDateTime finishAt, 
 			String resultsPath, int maxGameDuration) {
 		
-		long startAtSeconds = startAt.getEpochSecond();
-		long finishAtSeconds = finishAt.getEpochSecond();
+		long startAtSeconds = localDateToLong(startAt);
+		long finishAtSeconds = localDateToLong(finishAt);
 		
 		if(startAtSeconds>finishAtSeconds) {
 			throw new IllegalArgumentException("startAt cannot be more than finishAt");
 		}
-		if(startAtSeconds>Instant.now().getEpochSecond()) {
+		if(startAtSeconds>localDateToLong(LocalDateTime.now())) {
 			throw new IllegalArgumentException("startAt cannot be more than time now");
 		}
 		
@@ -182,6 +184,11 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 		competitionService.createCompititionSwitchers(comp, this);
 		return res == null ? CompetitionCode.CREATED : CompetitionCode.ALREADY_EXISTS;
 
+	}
+	
+	private long localDateToLong(LocalDateTime ldt) {
+		ZonedDateTime zdt = ZonedDateTime.of(ldt, ZoneId.systemDefault());
+		return zdt.toInstant().getEpochSecond();
 	}
 
 }

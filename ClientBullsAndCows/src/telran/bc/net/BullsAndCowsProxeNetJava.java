@@ -10,6 +10,7 @@ import static telran.bc.api.RequestTypesApi.START;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import telran.bc.dto.CompetitionCode;
@@ -70,13 +71,6 @@ public class BullsAndCowsProxeNetJava implements BullsAndCowsOperations{
 	}
 
 	@Override
-	public CompetitionCode createNewCompetition(Instant startAt, Instant finishAt, String resultsPath,
-			int maxGameDuration) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void clearCurrentGames() {
 		// TODO Auto-generated method stub
 		
@@ -86,6 +80,13 @@ public class BullsAndCowsProxeNetJava implements BullsAndCowsOperations{
 	public void deleteGame(User user) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public CompetitionCode createNewCompetition(LocalDateTime startAt, LocalDateTime finishAt, String resultsPath,
+			int maxGameDuration) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

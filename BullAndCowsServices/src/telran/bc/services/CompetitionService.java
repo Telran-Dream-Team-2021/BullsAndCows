@@ -18,7 +18,7 @@ public class CompetitionService {
 	
 	public void createCompititionSwitchers(Competition comp, BullsAndCowsOperationsImpl BC) {
 		ModeSwitcher switcher = new ModeSwitcher(BC);
-		long timeNow = Instant.now().getEpochSecond();
+		long timeNow = System.currentTimeMillis()/1000;
 		long timeStart = comp.getStartAt() - timeNow;
 		long timeEnd = comp.getFinishAt() - timeNow;
 		scheduler.schedule(switcher, timeStart, TimeUnit.SECONDS);
