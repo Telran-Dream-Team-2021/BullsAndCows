@@ -1,26 +1,9 @@
 package telran.bc.services;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.TreeMap;
-
-import telran.bc.dto.Competition;
-import telran.bc.dto.CompetitionCode;
-import telran.bc.dto.Game;
-import telran.bc.dto.Move;
-import telran.bc.dto.MoveData;
-import telran.bc.dto.SearchGameDataRequest;
-import telran.bc.dto.SearchGameDataResponce;
-import telran.bc.dto.User;
-import telran.bc.dto.UserCodes;
+import java.io.*;
+import java.time.*;
+import java.util.*;
+import telran.bc.dto.*;
 
 public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Serializable {
 	private static final long serialVersionUID = 1L;
@@ -191,7 +174,7 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 	@SuppressWarnings("unchecked")
 	@Override
 	public ArrayList<LocalDateTime> getAllCompetitions() {
-		return new ArrayList(competitions.keySet().stream().filter(k -> k.compareTo(LocalDateTime.now()) > 0).toList());
+		return new ArrayList<LocalDateTime>(competitions.keySet().stream().filter(k -> k.compareTo(LocalDateTime.now()) > 0).toList());
 	}
 
 	@Override

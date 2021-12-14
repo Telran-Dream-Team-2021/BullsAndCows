@@ -2,23 +2,12 @@ package telran.bc.net;
 
 import static telran.bc.api.RequestTypesApi.*;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.Instant;
 import java.util.ArrayList;
 
-import telran.bc.dto.CompetitionCode;
-import telran.bc.dto.Move;
-import telran.bc.dto.MoveData;
-import telran.bc.dto.RegistrationToCompetitionData;
-import telran.bc.dto.SearchGameDataRequest;
-import telran.bc.dto.SearchGameDataResponce;
-import telran.bc.dto.User;
-import telran.bc.dto.UserCodes;
+import telran.bc.dto.*;
 import telran.bc.services.BullsAndCowsOperations;
 import telran.net.NetJavaClient;
-import telran.net.UdpJavaClient;
 
 public class BullsAndCowsProxeNetJava implements BullsAndCowsOperations{
 	NetJavaClient protocol;
