@@ -30,6 +30,7 @@ public class TcpJavaServer extends NetJavaServer {
 		while (true) {
 			try {
 				Socket socket = serverSocket.accept();
+				sockets.add(socket);
 				socket.setSoTimeout(1000);
 				executor.execute(new Thread(new TcpClientServer(socket, protocol)));
 				if (isShutdown)

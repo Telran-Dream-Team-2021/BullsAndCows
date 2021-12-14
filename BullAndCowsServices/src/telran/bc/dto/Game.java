@@ -89,7 +89,7 @@ public class Game implements Serializable{
 		return new Move(bulls, cows, number);
 	}
 	
-	private void finishGame() {
+	public void finishGame() {
 		active = false;
 		timeEnd = LocalDateTime.now();
 	}

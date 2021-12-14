@@ -47,11 +47,11 @@ public class User implements Serializable {
 		return new Game(++nonce);
 	}
 
-	public void saveGame(Game currentGame) throws FileNotFoundException, IOException {
+	public void saveGame(Game currentGame, String path) throws FileNotFoundException, IOException {
 		if (!currentGame.isActive()) {
 			LocalDateTime time = currentGame.getTimeEnd();
 			games.put(time, currentGame);
-			String filePath = String.format("games/%d_%s_%d_%d_%d_%d_%d.data", getId(), getName(), time.getYear(),
+			String filePath = String.format("%s/%d_%s_%d_%d_%d_%d_%d.data", path, getId(), getName(), time.getYear(),
 					time.getMonth().getValue(), time.getDayOfMonth(), time.getHour(), time.getMinute());
 			try (ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream(filePath))) {
 				writer.writeObject(currentGame);

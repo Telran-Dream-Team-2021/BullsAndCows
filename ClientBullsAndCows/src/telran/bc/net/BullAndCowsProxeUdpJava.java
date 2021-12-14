@@ -2,8 +2,11 @@ package telran.bc.net;
 
 import static telran.bc.api.RequestTypesApi.*;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import telran.bc.dto.CompetitionCode;
 import telran.bc.dto.Move;
 import telran.bc.dto.MoveData;
 import telran.bc.dto.SearchGameDataRequest;
@@ -54,5 +57,24 @@ public class BullAndCowsProxeUdpJava extends UdpJavaClient implements BullsAndCo
 	@Override
 	public UserCodes checkUser(long userId) throws Exception {
 		return send(CHECK_USER, userId);
+	}
+
+	@Override
+	public void clearCurrentGames() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteGame(User user) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public CompetitionCode createNewCompetition(LocalDateTime startAt, LocalDateTime finishAt, String resultsPath,
+			int maxGameDuration) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
