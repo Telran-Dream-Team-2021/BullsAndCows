@@ -2,13 +2,9 @@ package telran.net;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
-import telran.net.NetJavaServer;
 
 public class TcpJavaServer extends NetJavaServer {
 	private ServerSocket serverSocket;

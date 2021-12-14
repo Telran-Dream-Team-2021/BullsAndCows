@@ -17,7 +17,7 @@ public class BullsAndCowsServerAppl {
 	public static void main(String[] args) throws Exception {
 		InputOutput io = new ConsoleInputOutput();
 		Properties props = new Properties();
-		props.load(new FileInputStream("../NetJavaCommon/application.properties"));
+		props.load(new FileInputStream("./TcpJavaServer/application.properties"));
 		int port = Integer.parseInt(props.getProperty("port"));
 		String base_package = props.getProperty("base_package");
 		String protocolName = props.getProperty("server_protocol");

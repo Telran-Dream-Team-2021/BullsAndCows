@@ -30,7 +30,6 @@ public <T> T send(String requestType, Serializable data) throws Exception {
 	@Override
 	public void close() throws IOException {
 		socket.close();
-
 	}
 
 }
