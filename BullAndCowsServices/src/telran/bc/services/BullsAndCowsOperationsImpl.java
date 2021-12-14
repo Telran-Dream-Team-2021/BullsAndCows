@@ -174,14 +174,14 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 		if(startAtSeconds>finishAtSeconds) {
 			throw new IllegalArgumentException("startAt cannot be more than finishAt");
 		}
-		if(startAtSeconds>localDateToLong(LocalDateTime.now())) {
-			throw new IllegalArgumentException("startAt cannot be more than time now");
+		if(startAtSeconds<localDateToLong(LocalDateTime.now())) {
+			throw new IllegalArgumentException("startAt cannot be less than time now");
 		}
 		
 		Competition comp = new Competition(startAtSeconds, finishAtSeconds, resultsPath,
 				maxGameDuration);
 		var res = competitions.putIfAbsent(finishAt, comp);
-		competitionService.createCompititionSwitchers(comp, this);
+		competitionService.createCompetitionSwitchers(comp, this);
 		return res == null ? CompetitionCode.CREATED : CompetitionCode.ALREADY_EXISTS;
 
 	}

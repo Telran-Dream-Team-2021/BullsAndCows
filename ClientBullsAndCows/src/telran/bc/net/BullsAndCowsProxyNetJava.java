@@ -24,11 +24,11 @@ import telran.bc.services.BullsAndCowsOperations;
 import telran.net.NetJavaClient;
 import telran.net.UdpJavaClient;
 
-public class BullsAndCowsProxeNetJava implements BullsAndCowsOperations{
+public class BullsAndCowsProxyNetJava implements BullsAndCowsOperations{
 
 	NetJavaClient protocol;
 
-	public BullsAndCowsProxeNetJava(NetJavaClient protocol) throws Exception {
+	public BullsAndCowsProxyNetJava(NetJavaClient protocol) throws Exception {
 		this.protocol = protocol;
 	}
 
