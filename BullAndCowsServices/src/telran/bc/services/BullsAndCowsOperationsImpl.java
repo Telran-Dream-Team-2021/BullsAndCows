@@ -86,7 +86,7 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 		User currentUser = users.get(userId);
 		Game game = currentGames.get(currentUser);
 		if (game == null || !game.isActive()) {
-			throw new IllegalArgumentException("Game is not active");
+			throw new IllegalArgumentException("Game is not active. Start new game!");
 		}
 		game.addMove(number);
 
