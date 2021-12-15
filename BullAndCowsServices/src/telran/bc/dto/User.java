@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,12 +52,28 @@ public class User implements Serializable {
 		if (!currentGame.isActive()) {
 			LocalDateTime time = currentGame.getTimeEnd();
 			games.put(time, currentGame);
-			String filePath = String.format("%s/%d_%s_%d_%d_%d_%d_%d.data", path, getId(), getName(), time.getYear(),
-					time.getMonth().getValue(), time.getDayOfMonth(), time.getHour(), time.getMinute());
-			try (ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream(filePath))) {
-				writer.writeObject(currentGame);
-				System.out.println("Game has been saved to: " + filePath);
-			}
+			saveGameToDataFormat(currentGame, path, time);
+			saveGameToTxtFormat(currentGame, path, time);
+		}
+	}
+
+	private void saveGameToTxtFormat(Game currentGame, String path, LocalDateTime time) throws FileNotFoundException, IOException {
+		String filePath = String.format("%s/%d_%s_%d_%d_%d_%d_%d.txt", path, getId(), getName(), time.getYear(),
+				time.getMonth().getValue(), time.getDayOfMonth(), time.getHour(), time.getMinute());
+		try (PrintWriter writer = new PrintWriter(filePath)) {
+			currentGame.getMoves().stream()
+				.forEach(m -> writer.println(m.toString()));
+			System.out.println("Game has been saved to: " + filePath);
+		}	
+	}
+
+	private void saveGameToDataFormat(Game currentGame, String path, LocalDateTime time)
+			throws IOException, FileNotFoundException {
+		String filePath = String.format("%s/%d_%s_%d_%d_%d_%d_%d.data", path, getId(), getName(), time.getYear(),
+				time.getMonth().getValue(), time.getDayOfMonth(), time.getHour(), time.getMinute());
+		try (ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream(filePath))) {
+			writer.writeObject(currentGame);
+			System.out.println("Game has been saved to: " + filePath);
 		}
 	}
 
