@@ -132,6 +132,7 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 
 	private String getSavePath() {
 		return null;
+//		return "./games/competition123"; //for test purposes
 	}
 
 	@Override
@@ -149,7 +150,7 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 	public void save(String filePath) throws Exception {
 		try (ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream(filePath))) {
 			writer.writeObject(this);
-			System.out.println("game data was been saved");
+			System.out.println("game data has been saved");
 		}
 	}
 	
