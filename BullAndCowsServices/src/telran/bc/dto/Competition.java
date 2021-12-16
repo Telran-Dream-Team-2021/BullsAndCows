@@ -5,10 +5,10 @@ import java.util.Set;
 
 public class Competition {
 	private Set<Long> users;
-	private long startAt;
-	private long finishAt;
-	private String resultsPath;
-	private int maxGameDuration;
+	private final long startAt;
+	private final long finishAt;
+	private final String resultsPath;
+	private final int maxGameDuration;
 
 	public Competition(long startAt, long finishAt, String resultsPath, int maxGameDuration) {
 		this.startAt = startAt;

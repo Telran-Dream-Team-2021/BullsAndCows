@@ -15,8 +15,8 @@ public class CompetitionService {
 		//TODO ALEX
 	}
 	
-	public void createCompetitionSwitchers(Competition comp, BullsAndCowsOperationsImpl BC) {
-		ModeSwitcher switcher = new ModeSwitcher(BC);
+	public void createCompetitionSwitchers(Competition comp, BullsAndCowsOperationsImpl bc) {
+		ModeSwitcher switcher = new ModeSwitcher(bc);
 		long timeNow = System.currentTimeMillis()/1000;
 		long timeStart = comp.getStartAt() - timeNow;
 		long timeEnd = comp.getFinishAt() - timeNow;
