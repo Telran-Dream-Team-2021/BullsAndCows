@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import telran.bc.controller.actions.BullsAndCowsActions;
-import telran.bc.net.BullsAndCowsProxeNetJava;
+import telran.bc.net.BullsAndCowsProxyNetJava;
 import telran.bc.services.BullsAndCowsOperations;
 import telran.net.NetJavaClient;
 import telran.view.*;
@@ -29,7 +29,7 @@ public class BullAndCowsConsoleAppl {
 			@SuppressWarnings("unchecked")
 			Class<NetJavaClient> clazz = (Class<NetJavaClient>) Class.forName(base_package + protocolName);
 			NetJavaClient protocol = clazz.getConstructor(String.class, int.class).newInstance(host, port);
-			bullsAndCowsService = new BullsAndCowsProxeNetJava(protocol);
+			bullsAndCowsService = new BullsAndCowsProxyNetJava(protocol);
 			ArrayList<Item> items = BullsAndCowsActions.getItems(bullsAndCowsService, io);
 			Menu menu = new Menu("Bulls and Cows", items);
 			try {

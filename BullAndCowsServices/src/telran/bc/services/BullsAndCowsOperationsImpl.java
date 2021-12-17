@@ -112,6 +112,7 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 
 	private String getSavePath() {
 		return null;
+//		return "./games/competition123"; //for test purposes
 	}
 
 	@Override
@@ -129,7 +130,7 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 	public void save(String filePath) throws Exception {
 		try (ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream(filePath))) {
 			writer.writeObject(this);
-			System.out.println("game data was been saved");
+			System.out.println("game data has been saved");
 		}
 	}
 	
@@ -154,14 +155,15 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 		if(startAtSeconds>finishAtSeconds) {
 			throw new IllegalArgumentException("startAt cannot be more than finishAt");
 		}
-		if(startAtSeconds < localDateToLong(LocalDateTime.now())) {
-			throw new IllegalArgumentException("startAt cannot be more than time now");
+
+		if(startAtSeconds<localDateToLong(LocalDateTime.now())) {
+			throw new IllegalArgumentException("startAt cannot be less than time now");
 		}
 		
 		Competition comp = new Competition(startAtSeconds, finishAtSeconds, resultsPath,
 				maxGameDuration);
 		var res = competitions.putIfAbsent(finishAt, comp);
-		competitionService.createCompititionSwitchers(comp, this);
+		competitionService.createCompetitionSwitchers(comp, this);
 		return res == null ? CompetitionCode.CREATED : CompetitionCode.ALREADY_EXISTS;
 
 	}
