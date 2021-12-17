@@ -79,7 +79,7 @@ public class BullsAndCowsProxeNetJava implements BullsAndCowsOperations{
 	}
 
 	@Override
-	public CompetitionCode registerToCompetition(long userId, LocalDateTime localDateTime) throws Exception {
-		return protocol.send(REGISTRATION_TO_COMPETITION, new RegistrationToCompetitionData(userId, localDateTime));
+	public CompetitionCode registerToCompetition(RegistrationToCompetitionData data) throws Exception {
+		return protocol.send(REGISTRATION_TO_COMPETITION, data);
 	}
 }

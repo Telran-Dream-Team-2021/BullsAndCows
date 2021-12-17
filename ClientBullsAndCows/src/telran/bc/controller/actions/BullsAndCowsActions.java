@@ -9,6 +9,7 @@ import java.util.List;
 import telran.bc.dto.Game;
 import telran.bc.dto.Move;
 import telran.bc.dto.MoveData;
+import telran.bc.dto.RegistrationToCompetitionData;
 import telran.bc.dto.SearchGameDataRequest;
 import telran.bc.dto.SearchGameDataResponce;
 import telran.bc.dto.UserCodes;
@@ -92,7 +93,7 @@ public class BullsAndCowsActions {
 		variants.append("Enter number of competition.\n");
 		
 		int userChoiсe = io.readInt(variants.toString(), 1, competitions.size());
-		io.writeObjectLine(bullsAndCowsService.registerToCompetition(userId, competitions.get(userChoiсe - 1)));
+		io.writeObjectLine(bullsAndCowsService.registerToCompetition(new RegistrationToCompetitionData(userId, competitions.get(userChoiсe - 1))));
 	}
 
 	private static void searchGames(InputOutput io) throws Exception {

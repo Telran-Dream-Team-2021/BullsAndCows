@@ -2,7 +2,6 @@ package telran.bc.net;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import telran.bc.dto.Move;
@@ -15,7 +14,6 @@ import telran.net.ApplProtocolJava;
 import telran.net.dto.RequestJava;
 import telran.net.dto.ResponseCode;
 import telran.net.dto.ResponseJava;
-import static telran.bc.api.RequestTypesApi.*;
 
 public class BullsAndCowsProtocol implements ApplProtocolJava{
 	BullsAndCowsOperations bullsAndCowsOperations;
@@ -95,9 +93,9 @@ public class BullsAndCowsProtocol implements ApplProtocolJava{
 	@SuppressWarnings("unused")
 	private ResponseJava bc_registration_competition(Serializable data) {
 		try {
-			long userId = ((RegistrationToCompetitionData)data).userId;
-			LocalDateTime competitionKey = ((RegistrationToCompetitionData)data).competitionKey;
-			return new ResponseJava(ResponseCode.OK, bullsAndCowsOperations.registerToCompetition(userId, competitionKey));
+//			long userId = ((RegistrationToCompetitionData)data).userId;
+//			LocalDateTime competitionKey = ((RegistrationToCompetitionData)data).competitionKey;
+			return new ResponseJava(ResponseCode.OK, bullsAndCowsOperations.registerToCompetition((RegistrationToCompetitionData)data));
 		} catch (Exception e) {
 			return getWrongDataResponse(e);
 		}

@@ -10,7 +10,7 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 	private static final String filePath = "BCGameData.data";
 	private HashMap<Long, User> users = new HashMap<>();
 	private HashMap<User, Game> currentGames = new HashMap<>();
-	private TreeMap<LocalDateTime, Competition> competitions = new TreeMap<>();
+	private static TreeMap<LocalDateTime, Competition> competitions = new TreeMap<>();
 	CompetitionService competitionService = new CompetitionService();
 	public static BullsAndCowsOperations getBullsAndCowsGame(String filePath) {
 		try (ObjectInputStream reader = new ObjectInputStream(new FileInputStream(filePath))) {
@@ -154,7 +154,7 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 		if(startAtSeconds>finishAtSeconds) {
 			throw new IllegalArgumentException("startAt cannot be more than finishAt");
 		}
-		if(startAtSeconds>localDateToLong(LocalDateTime.now())) {
+		if(startAtSeconds < localDateToLong(LocalDateTime.now())) {
 			throw new IllegalArgumentException("startAt cannot be more than time now");
 		}
 		
@@ -171,14 +171,13 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 		return zdt.toInstant().getEpochSecond();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public ArrayList<LocalDateTime> getAllCompetitions() {
 		return new ArrayList<LocalDateTime>(competitions.keySet().stream().filter(k -> k.compareTo(LocalDateTime.now()) > 0).toList());
 	}
 
 	@Override
-	public CompetitionCode registerToCompetition(long userId, LocalDateTime localDateTime) throws Exception {
-		return competitions.get(localDateTime).registerUser(userId);
+	public CompetitionCode registerToCompetition(RegistrationToCompetitionData data) throws Exception {
+		return competitions.get(data.competitionKey).registerUser(data.userId);
 	}
 }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import telran.bc.dto.CompetitionCode;
 import telran.bc.dto.Move;
 import telran.bc.dto.MoveData;
+import telran.bc.dto.RegistrationToCompetitionData;
 import telran.bc.dto.SearchGameDataRequest;
 import telran.bc.dto.SearchGameDataResponce;
 import telran.bc.dto.User;
@@ -24,5 +25,5 @@ public interface BullsAndCowsOperations{
 	public void clearCurrentGames();
 	public void deleteGame(User user);
 	public ArrayList<LocalDateTime> getAllCompetitions() throws Exception;
-	public CompetitionCode registerToCompetition(long userId, LocalDateTime localDateTime) throws Exception;
+	public CompetitionCode registerToCompetition(RegistrationToCompetitionData data) throws Exception;
 }
