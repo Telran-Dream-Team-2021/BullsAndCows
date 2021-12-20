@@ -9,7 +9,6 @@ import telran.bc.stats.dto.UserResult;
 
 public class BullsAndCowsStatisticsServices {
 	private List<CompetitionResult> competitionResults = new ArrayList<CompetitionResult>();
-	private Map<Long, UserResult> userResultsByUserId = new HashMap<Long, UserResult>();
 	private int usersAmount = 0;
 	private int totalGamesAmount = 0;
 	private int position = 1;
@@ -30,18 +29,19 @@ public class BullsAndCowsStatisticsServices {
 	
 	private CompetitionResult getCompetitionResult(File compFolder) {
 		String compName = compFolder.getName();
+		Map<Long, UserResult> userResultsByUserId = new HashMap<>();
 		Map<Long, List<Integer>> gamesHistoryByUser = new HashMap<>();
 		Arrays.stream(compFolder.listFiles((dir, name) -> name.matches
-				("\\d*_?*_[\\d]{4}_[\\d]{2}_[\\d]{1,2}_[\\d]{1,2}_[\\d]{1,2}")))
+		("\\d*_.+_[\\d]{4}_[\\d]{1,2}_[\\d]{1,2}_[\\d]{1,2}_[\\d]{1,2}\\.txt")))
 			.forEach(file -> {
 				try(BufferedReader reader = new BufferedReader(new FileReader((File)file))) {
-					UserResult userResult = new UserResult(getUserId(file), getUserName(file));
-					userResultsByUserId.put(userResult.getUserId(), userResult);
+					long userId = getUserId(file);
 					int movesAmount = (int) reader.lines().count();
-					gamesHistoryByUser.compute(userResult.getUserId(), (userId, gamesHistory) -> {
-						if(gamesHistoryByUser.get(userId) == null) {
+					UserResult userResult = new UserResult(userId, getUserName(file));
+					userResultsByUserId.put(userId, userResult);
+					gamesHistoryByUser.compute(userId, (id, gamesHistory) -> {
+						if(gamesHistoryByUser.get(id) == null) {
 							gamesHistory = new LinkedList<Integer>();
-							gamesHistoryByUser.put(userId, gamesHistory);
 							usersAmount++;
 						}
 						gamesHistory.add(movesAmount);
@@ -50,26 +50,37 @@ public class BullsAndCowsStatisticsServices {
 						}
 					);
 				} catch(Exception e) {
-					System.out.println("Wrong path to games directory or games data files are not consistent");
+					e.printStackTrace();
+//					System.out.println("Wrong path to games directory or games data files are not consistent");
 				}
 			});	
-		List<UserResult> userResults = getUserResults(gamesHistoryByUser);
-		return new CompetitionResult(compName, usersAmount, totalGamesAmount, userResults);
+		List<UserResult> userResults = getUserResults(gamesHistoryByUser, userResultsByUserId);
+		CompetitionResult competitionResult = 
+				new CompetitionResult(compName, usersAmount, totalGamesAmount, userResults);
+		cleanGlobalVariables();
+		return competitionResult;
 	}
 	
-	private List<UserResult> getUserResults(Map<Long, List<Integer>> gamesHistoryByUser) {
+	private void cleanGlobalVariables() {
+		usersAmount = 0;
+		totalGamesAmount = 0;
+		position = 1;	
+	}
+
+	private List<UserResult> getUserResults(Map<Long, List<Integer>> gamesHistoryByUser,
+			Map<Long, UserResult> userResultsByUserId) {
 		gamesHistoryByUser.entrySet().stream()
 			.sorted((e1, e2) -> {
-				if(e1.getValue().size() > e2.getValue().size()) {
+				if(e1.getValue().size() < e2.getValue().size()) {
 					return 1;
-				} else if(e1.getValue().size() < e2.getValue().size()) {
+				} else if(e1.getValue().size() > e2.getValue().size()) {
 					return -1;
 				} else {
 					if(e1.getValue().stream().mapToInt(i -> i).sum() 
-							> e1.getValue().stream().mapToInt(i -> i).sum()) {
+							> e2.getValue().stream().mapToInt(i -> i).sum()) {
 						return 1;
 					} else
-						return -1;
+						return 0;
 				}
 			})
 			.forEach(e -> {
