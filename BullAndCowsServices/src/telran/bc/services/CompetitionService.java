@@ -30,5 +30,4 @@ public class CompetitionService implements Serializable {
     public GameFinisher createFinisher(Game game, Thread threadUser) {
         return new GameFinisher(game, threadUser);
     }
-
 }

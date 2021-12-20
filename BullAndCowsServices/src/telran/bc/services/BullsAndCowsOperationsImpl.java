@@ -1,7 +1,6 @@
 package telran.bc.services;
 
 import telran.bc.dto.*;
-
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -18,7 +17,6 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
     private static final HashMap<Long, User> users = new HashMap<>();
     private static HashMap<User, Game> currentGames = new HashMap<>();
     CompetitionService competitionService = new CompetitionService();
-
 
     public static BullsAndCowsOperations getBullsAndCowsGame(String filePath) {
         try (ObjectInputStream reader = new ObjectInputStream(new FileInputStream(filePath))) {
