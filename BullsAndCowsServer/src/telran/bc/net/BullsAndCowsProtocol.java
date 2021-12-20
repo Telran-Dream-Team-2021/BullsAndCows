@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import telran.bc.dto.Move;
 import telran.bc.dto.MoveData;
+import telran.bc.dto.RegistrationToCompetitionData;
 import telran.bc.dto.SearchGameDataRequest;
 import telran.bc.dto.User;
 import telran.bc.services.BullsAndCowsOperations;
@@ -13,7 +14,6 @@ import telran.net.ApplProtocolJava;
 import telran.net.dto.RequestJava;
 import telran.net.dto.ResponseCode;
 import telran.net.dto.ResponseJava;
-import static telran.bc.api.RequestTypesApi.*;
 
 public class BullsAndCowsProtocol implements ApplProtocolJava{
 	BullsAndCowsOperations bullsAndCowsOperations;
@@ -76,6 +76,26 @@ public class BullsAndCowsProtocol implements ApplProtocolJava{
 		try {
 			User user = (User)data;
 			return new ResponseJava(ResponseCode.OK, bullsAndCowsOperations.registration(user.getId(), user.getName()));
+		} catch (Exception e) {
+			return getWrongDataResponse(e);
+		}
+	}
+	
+	@SuppressWarnings("unused")
+	private ResponseJava bc_get_competitions(Serializable data) {
+		try {
+			return new ResponseJava(ResponseCode.OK, bullsAndCowsOperations.getAllCompetitions());
+		} catch (Exception e) {
+			return getWrongDataResponse(e);
+		}
+	}
+	
+	@SuppressWarnings("unused")
+	private ResponseJava bc_registration_competition(Serializable data) {
+		try {
+//			long userId = ((RegistrationToCompetitionData)data).userId;
+//			LocalDateTime competitionKey = ((RegistrationToCompetitionData)data).competitionKey;
+			return new ResponseJava(ResponseCode.OK, bullsAndCowsOperations.registerToCompetition((RegistrationToCompetitionData)data));
 		} catch (Exception e) {
 			return getWrongDataResponse(e);
 		}

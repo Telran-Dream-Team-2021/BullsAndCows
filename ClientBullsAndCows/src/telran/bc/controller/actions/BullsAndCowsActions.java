@@ -9,6 +9,7 @@ import java.util.List;
 import telran.bc.dto.Game;
 import telran.bc.dto.Move;
 import telran.bc.dto.MoveData;
+import telran.bc.dto.RegistrationToCompetitionData;
 import telran.bc.dto.SearchGameDataRequest;
 import telran.bc.dto.SearchGameDataResponce;
 import telran.bc.dto.UserCodes;
@@ -61,9 +62,38 @@ public class BullsAndCowsActions {
 				t.writeObjectLine(e.getMessage());
 			}
 		}));
+		menuItems.add(Item.of("Registration to competition", t -> {
+			try {
+				registrationToCompetition(t);
+			} catch (Exception e) {
+				t.writeObjectLine(e.getMessage());
+			}
+		}));
 		menuItems.add(Item.of("Exit", e->{}, true));
 
 		return menuItems;
+	}
+
+	private static void registrationToCompetition(InputOutput io) throws Exception {
+		if(userId==0L) {
+			setUser(getId(io), io);
+		}
+		
+		List<LocalDateTime> competitions = bullsAndCowsService.getAllCompetitions();
+		
+		if (competitions.size() == 0) {
+			throw new Exception("There are no scheduled competitions");
+		}
+		
+		StringBuilder variants = new StringBuilder("");
+		variants.append("Incoming competitions:\n");
+		for (int i = 0; i < competitions.size(); i++) {
+			variants.append(String.format("%d - %s\n", i + 1, competitions.get(i).toString()));
+		}
+		variants.append("Enter number of competition.\n");
+		
+		int userChoiсe = io.readInt(variants.toString(), 1, competitions.size());
+		io.writeObjectLine(bullsAndCowsService.registerToCompetition(new RegistrationToCompetitionData(userId, competitions.get(userChoiсe - 1))));
 	}
 
 	private static void searchGames(InputOutput io) throws Exception {

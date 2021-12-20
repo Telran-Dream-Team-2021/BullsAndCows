@@ -1,9 +1,11 @@
 package telran.bc.net;
 
 import static telran.bc.api.RequestTypesApi.CHECK_USER;
+import static telran.bc.api.RequestTypesApi.COMPETITIONS;
 import static telran.bc.api.RequestTypesApi.GAME_ACTIVE;
 import static telran.bc.api.RequestTypesApi.MOVE;
 import static telran.bc.api.RequestTypesApi.REGISTRATION;
+import static telran.bc.api.RequestTypesApi.REGISTRATION_TO_COMPETITION;
 import static telran.bc.api.RequestTypesApi.SEARCH_GAMES;
 import static telran.bc.api.RequestTypesApi.START;
 
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import telran.bc.dto.CompetitionCode;
 import telran.bc.dto.Move;
 import telran.bc.dto.MoveData;
+import telran.bc.dto.RegistrationToCompetitionData;
 import telran.bc.dto.SearchGameDataRequest;
 import telran.bc.dto.SearchGameDataResponce;
 import telran.bc.dto.User;
@@ -87,6 +90,16 @@ public class BullsAndCowsProxyNetJava implements BullsAndCowsOperations{
 			int maxGameDuration) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public ArrayList<LocalDateTime> getAllCompetitions() throws Exception {
+		return protocol.send(COMPETITIONS, "");
+	}
+
+	@Override
+	public CompetitionCode registerToCompetition(RegistrationToCompetitionData data) throws Exception {
+		return protocol.send(REGISTRATION_TO_COMPETITION, data);
 	}
 
 }

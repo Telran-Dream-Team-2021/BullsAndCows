@@ -2,9 +2,10 @@ package telran.bc.dto;
 
 import java.time.Instant;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class Competition {
-	private Set<Long> users;
+	private Set<Long> users = new TreeSet<Long>();
 	private long startAt;
 	private long finishAt;
 	private String resultsPath;
