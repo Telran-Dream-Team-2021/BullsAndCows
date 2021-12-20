@@ -44,7 +44,6 @@ public class TcpJavaClient extends NetJavaClient implements Closeable {
 	@Override
 	public void close() throws IOException {
 		socket.close();
-
 	}
 
 }

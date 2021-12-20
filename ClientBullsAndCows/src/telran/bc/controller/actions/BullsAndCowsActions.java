@@ -1,5 +1,10 @@
 package telran.bc.controller.actions;
 
+import telran.bc.dto.*;
+import telran.bc.services.BullsAndCowsOperations;
+import telran.view.InputOutput;
+import terlan.view.Item;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -71,27 +76,27 @@ public class BullsAndCowsActions {
 		}));
 		menuItems.add(Item.of("Exit", e->{}, true));
 
-		return menuItems;
-	}
+        return menuItems;
+    }
 
 	private static void registrationToCompetition(InputOutput io) throws Exception {
 		if(userId==0L) {
 			setUser(getId(io), io);
 		}
-		
+
 		List<LocalDateTime> competitions = bullsAndCowsService.getAllCompetitions();
-		
+
 		if (competitions.size() == 0) {
 			throw new Exception("There are no scheduled competitions");
 		}
-		
+
 		StringBuilder variants = new StringBuilder("");
 		variants.append("Incoming competitions:\n");
 		for (int i = 0; i < competitions.size(); i++) {
 			variants.append(String.format("%d - %s\n", i + 1, competitions.get(i).toString()));
 		}
 		variants.append("Enter number of competition.\n");
-		
+
 		int userChoiсe = io.readInt(variants.toString(), 1, competitions.size());
 		io.writeObjectLine(bullsAndCowsService.registerToCompetition(new RegistrationToCompetitionData(userId, competitions.get(userChoiсe - 1))));
 	}
@@ -100,136 +105,136 @@ public class BullsAndCowsActions {
 		SearchGameDataRequest gameDataRequest = new SearchGameDataRequest(getId(io), getDateFrom(io), getDateTo(io));
 		SearchGameDataResponce gameDataResponce = bullsAndCowsService.searchGames(gameDataRequest);
 
-		if (gameDataResponce.games.size() > 0) {
-			displayGames(gameDataResponce, io);
-		} else {
-			io.writeObjectLine("No games for specified period");
-		}
-	}
-	
-	private static void getAllUserGames(InputOutput io) throws Exception {
-		SearchGameDataRequest gameDataRequest = new SearchGameDataRequest(getId(io), LocalDateTime.of(2000, 1, 1, 0, 0, 0), LocalDateTime.of(3000, 1, 1, 0, 0, 0));
-		SearchGameDataResponce gameDataResponce = bullsAndCowsService.searchGames(gameDataRequest);
+        if (gameDataResponce.games.size() > 0) {
+            displayGames(gameDataResponce, io);
+        } else {
+            io.writeObjectLine("No games for specified period");
+        }
+    }
 
-		if (gameDataResponce.games.size() > 0) {
-			displayGames(gameDataResponce, io);
-		} else {
-			io.writeObjectLine("You don't have games");
-		}
-	}
+    private static void getAllUserGames(InputOutput io) throws Exception {
+        SearchGameDataRequest gameDataRequest = new SearchGameDataRequest(getId(io), LocalDateTime.of(2000, 1, 1, 0, 0, 0), LocalDateTime.of(3000, 1, 1, 0, 0, 0));
+        SearchGameDataResponce gameDataResponce = bullsAndCowsService.searchGames(gameDataRequest);
 
-	private static void displayGames(SearchGameDataResponce data, InputOutput io) {
-		List<Game> games = data.games;
-		io.writeObjectLine("_".repeat(60));
-		io.writeObjectLine("");
-		io.writeObjectLine(String.format("ID - %d, NAME - %s", data.userId, data.userName));
-		io.writeObjectLine("_".repeat(60));
-		io.writeObjectLine("");
-		io.writeObjectLine("Count of games " + games.size());
-		games.stream().filter(g -> {
-			io.writeObjectLine("_".repeat(60));
-			io.writeObjectLine("");
+        if (gameDataResponce.games.size() > 0) {
+            displayGames(gameDataResponce, io);
+        } else {
+            io.writeObjectLine("You don't have games");
+        }
+    }
 
-			io.writeObjectLine("GameId - " + g.getGameId() + "; Moves - " + g.getMoves().size() + "; Time end - "
-					+ g.getTimeEnd().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+    private static void displayGames(SearchGameDataResponce data, InputOutput io) {
+        List<Game> games = data.games;
+        io.writeObjectLine("_".repeat(60));
+        io.writeObjectLine("");
+        io.writeObjectLine(String.format("ID - %d, NAME - %s", data.userId, data.userName));
+        io.writeObjectLine("_".repeat(60));
+        io.writeObjectLine("");
+        io.writeObjectLine("Count of games " + games.size());
+        games.stream().filter(g -> {
+            io.writeObjectLine("_".repeat(60));
+            io.writeObjectLine("");
 
-			io.writeObjectLine("_ _ ".repeat(15));
-			io.writeObjectLine("");
-			return true;
-		}).flatMap(g -> g.getMoves().stream()).forEach(io::writeObjectLine);
-		io.writeObjectLine("_".repeat(60));
-	}
+            io.writeObjectLine("GameId - " + g.getGameId() + "; Moves - " + g.getMoves().size() + "; Time end - "
+                    + g.getTimeEnd().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 
-	private static LocalDateTime getDateFrom(InputOutput io) {
-		return io.readDate("Enter Date From in format - [yyyy-MM-dd HH:mm]", "yyyy-MM-dd HH:mm");
-	}
+            io.writeObjectLine("_ _ ".repeat(15));
+            io.writeObjectLine("");
+            return true;
+        }).flatMap(g -> g.getMoves().stream()).forEach(io::writeObjectLine);
+        io.writeObjectLine("_".repeat(60));
+    }
 
-	private static LocalDateTime getDateTo(InputOutput io) {
-		return io.readDate("Enter Date To in format - [yyyy-MM-dd HH:mm]", "yyyy-MM-dd HH:mm");
-	}
+    private static LocalDateTime getDateFrom(InputOutput io) {
+        return io.readDate("Enter Date From in format - [yyyy-MM-dd HH:mm]", "yyyy-MM-dd HH:mm");
+    }
 
-	private static void clearConsole() throws InterruptedException, IOException {
-		new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-	}
+    private static LocalDateTime getDateTo(InputOutput io) {
+        return io.readDate("Enter Date To in format - [yyyy-MM-dd HH:mm]", "yyyy-MM-dd HH:mm");
+    }
 
-	private static void move(InputOutput io) {
-		if(userId==0L) {
-			try {
-				setUser(getId(io), io);
-			} catch (Exception e) {
-				io.writeObjectLine(e.getMessage());
-			}
-		}
-		try {
-			MoveData moveData = new MoveData(getNumber(io), userId);
-			ArrayList<Move> moves = bullsAndCowsService.move(moveData);
-			displayMoves(moves, io);
-			while (bullsAndCowsService.currentGameIsActive(userId)) {
-				moveData = new MoveData(getNumber(io), userId);
-				moves = bullsAndCowsService.move(moveData);
-				try {
-					clearConsole();
-				} catch (Exception e) {
-				}
-				displayMoves(moves, io);
-			}
-		} catch (Exception e) {
-			io.writeObjectLine(e.getMessage());
-		}
-	}
+    private static void clearConsole() throws InterruptedException, IOException {
+        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+    }
 
-	private static void displayMoves(ArrayList<Move> moves, InputOutput io) {
+    private static void move(InputOutput io) {
+        if (userId == 0L) {
+            try {
+                setUser(getId(io), io);
+            } catch (Exception e) {
+                io.writeObjectLine(e.getMessage());
+            }
+        }
+        try {
+            MoveData moveData = new MoveData(getNumber(io), userId);
+            ArrayList<Move> moves = bullsAndCowsService.move(moveData);
+            displayMoves(moves, io);
+            while (bullsAndCowsService.currentGameIsActive(userId)) {
+                moveData = new MoveData(getNumber(io), userId);
+                moves = bullsAndCowsService.move(moveData);
+                try {
+                    clearConsole();
+                } catch (Exception e) {
+                }
+                displayMoves(moves, io);
+            }
+        } catch (Exception e) {
+            io.writeObjectLine(e.getMessage());
+        }
+    }
 
-		moves.forEach(m -> {
-			String res = String.format("Your number - %s; Bulls - %d; Cows - %d", m.getUserNumber(), m.getBulls(),
-					m.getCows());
-			io.writeObjectLine(res);
-			if (m.isWinner()) {
-				io.writeObjectLine("_".repeat(40));
-				io.writeObjectLine("Congratulations! Secret number is - " + m.getUserNumber());
-			}
-		});
+    private static void displayMoves(ArrayList<Move> moves, InputOutput io) {
 
-	}
+        moves.forEach(m -> {
+            String res = String.format("Your number - %s; Bulls - %d; Cows - %d", m.getUserNumber(), m.getBulls(),
+                    m.getCows());
+            io.writeObjectLine(res);
+            if (m.isWinner()) {
+                io.writeObjectLine("_".repeat(40));
+                io.writeObjectLine("Congratulations! Secret number is - " + m.getUserNumber());
+            }
+        });
 
-	private static String getNumber(InputOutput io) {
-		return io.readString("Enter number");
-	}
+    }
 
-	private static void startGame(InputOutput io) throws Exception {
-		if(userId==0L) {
-			setUser(getId(io), io);
-		}
-		long gameId = bullsAndCowsService.start(userId);
-		io.writeObjectLine("New Game! GameID - " + gameId);
-	}
+    private static String getNumber(InputOutput io) {
+        return io.readString("Enter number");
+    }
 
-	private static void registration(InputOutput io) throws Exception {
-		long id = getId(io);
-		UserCodes res = bullsAndCowsService.registration(id, getName(io));
-		if(UserCodes.OK==res) {
-			setUser(id, io);
-		}
-		io.writeObjectLine(res.toString());
-	}
-	
-	private static void setUser(long id, InputOutput io) throws Exception {
-		
-		UserCodes res = bullsAndCowsService.checkUser(id);
-		if(UserCodes.OK == res) {
-			userId = id;
-		} else {
-			io.writeObjectLine(res.toString());
-		}
-		
-	}
+    private static void startGame(InputOutput io) throws Exception {
+        if (userId == 0L) {
+            setUser(getId(io), io);
+        }
+        long gameId = bullsAndCowsService.start(userId);
+        io.writeObjectLine("New Game! GameID - " + gameId);
+    }
 
-	private static String getName(InputOutput io) {
-		return io.readString("Enter name");
-	}
+    private static void registration(InputOutput io) throws Exception {
+        long id = getId(io);
+        UserCodes res = bullsAndCowsService.registration(id, getName(io));
+        if (UserCodes.OK == res) {
+            setUser(id, io);
+        }
+        io.writeObjectLine(res.toString());
+    }
 
-	private static long getId(InputOutput io) {
-		return io.readLong("Enter User Id");
-	}
+    private static void setUser(long id, InputOutput io) throws Exception {
+
+        UserCodes res = bullsAndCowsService.checkUser(id);
+        if (UserCodes.OK == res) {
+            userId = id;
+        } else {
+            io.writeObjectLine(res.toString());
+        }
+
+    }
+
+    private static String getName(InputOutput io) {
+        return io.readString("Enter name");
+    }
+
+    private static long getId(InputOutput io) {
+        return io.readLong("Enter User Id");
+    }
 
 }

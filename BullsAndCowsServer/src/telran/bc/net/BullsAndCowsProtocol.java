@@ -15,7 +15,7 @@ import telran.net.dto.RequestJava;
 import telran.net.dto.ResponseCode;
 import telran.net.dto.ResponseJava;
 
-public class BullsAndCowsProtocol implements ApplProtocolJava{
+public class BullsAndCowsProtocol implements ApplProtocolJava {
 	BullsAndCowsOperations bullsAndCowsOperations;
 	
 	public BullsAndCowsProtocol(BullsAndCowsOperations bullsAndCowsOperations) {

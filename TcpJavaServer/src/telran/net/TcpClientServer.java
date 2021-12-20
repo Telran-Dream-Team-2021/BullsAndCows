@@ -7,9 +7,9 @@ import telran.net.dto.*;
 
 public class TcpClientServer implements Runnable {
 	private final Socket socket;
-	private ApplProtocolJava protocol;
-	private ObjectInputStream reader;
-	private ObjectOutputStream writer;
+	private final ApplProtocolJava protocol;
+	private final ObjectInputStream reader;
+	private final ObjectOutputStream writer;
 
 	public TcpClientServer(Socket socket, ApplProtocolJava protocol) throws IOException {
 		this.socket = socket;
@@ -21,7 +21,7 @@ public class TcpClientServer implements Runnable {
 	@Override
 	public void run() {
 		try (socket) {
-			while (true) {
+			while (!Thread.currentThread().isInterrupted()) {
 				try {
 					RequestJava request = (RequestJava) reader.readObject();
 					ResponseJava response = protocol.getResponse(request);
