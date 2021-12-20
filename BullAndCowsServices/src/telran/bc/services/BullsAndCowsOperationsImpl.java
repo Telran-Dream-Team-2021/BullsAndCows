@@ -15,10 +15,10 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 
     private static final long serialVersionUID = 1L;
     private static final String FILE_PATH = "BCGameData.data";
-    private volatile TreeMap<LocalDateTime, Competition> competitions = new TreeMap<>();
-    private volatile HashMap<Long, User> users = new HashMap<>();
+    private static TreeMap<LocalDateTime, Competition> competitions = new TreeMap<>();
+    private static HashMap<Long, User> users = new HashMap<>();
     CompetitionService competitionService = new CompetitionService();
-    private volatile HashMap<User, Game> currentGames = new HashMap<>();
+    private static HashMap<User, Game> currentGames = new HashMap<>();
     private String prefix = "";
 
 
