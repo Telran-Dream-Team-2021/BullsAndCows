@@ -14,5 +14,4 @@ public class ModeSwitcher implements Runnable {
         NetJavaServer.kickAllSokets();
         bcService.clearCurrentGames();
     }
-
 }

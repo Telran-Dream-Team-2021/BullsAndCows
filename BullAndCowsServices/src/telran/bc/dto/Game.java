@@ -8,22 +8,24 @@ import java.util.stream.Collectors;
 
 public class Game implements Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
-
     private final ArrayList<Move> moves;
     private final String secretNumber;
-    private boolean active;
     private final long gameId;
+    private final String gamePath;
+    private boolean active;
     private LocalDateTime timeEnd;
 
-    public Game(long gameId) {
+    public Game(long gameId, String gamePath) {
         this.secretNumber = generateSecretNumber();
         this.active = true;
         this.gameId = gameId;
         this.moves = new ArrayList<>();
+        this.gamePath = gamePath;
+    }
+
+    public String getGamePath() {
+        return gamePath;
     }
 
     public LocalDateTime getTimeEnd() {
