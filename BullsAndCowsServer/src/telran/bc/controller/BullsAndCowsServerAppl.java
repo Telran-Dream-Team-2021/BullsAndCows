@@ -21,6 +21,7 @@ public class BullsAndCowsServerAppl {
 
     private static final String FILE_PATH = "BCGameData.data";
     static InputOutput io;
+    static ApplProtocolJava applProtocol;
     private static BullsAndCowsOperations bullsAndCowsService;
 
     public static void main(String[] args) throws Exception {
@@ -33,7 +34,7 @@ public class BullsAndCowsServerAppl {
         String basePackage = props.getProperty("base_package");
         String protocolName = props.getProperty("server_protocol");
 
-        ApplProtocolJava applProtocol = new BullsAndCowsProtocol(BullsAndCowsOperationsImpl.getBullsAndCowsGame(FILE_PATH));
+        applProtocol = new BullsAndCowsProtocol(BullsAndCowsOperationsImpl.getBullsAndCowsGame(FILE_PATH));
 
         @SuppressWarnings("unchecked")
         Class<NetJavaServer> clazz = (Class<NetJavaServer>) Class.forName(basePackage + protocolName);

@@ -1,6 +1,7 @@
 package telran.bc.dto;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 
 public class Competition {
@@ -15,6 +16,7 @@ public class Competition {
 		this.finishAt = finishAt;
 		this.resultsPath = resultsPath;
 		this.maxGameDuration = maxGameDuration;
+		users = new HashSet<Long>();
 	}
 
 	public boolean isOnGoing() {
@@ -42,7 +44,7 @@ public class Competition {
 		return resultsPath;
 	}
 
-	public int getMaxGameDuration() {
+	public long getMaxGameDuration() {
 		return maxGameDuration;
 	}
 }

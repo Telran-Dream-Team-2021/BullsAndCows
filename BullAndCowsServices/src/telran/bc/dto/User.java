@@ -48,7 +48,7 @@ public class User implements Serializable {
 		return new Game(++nonce);
 	}
 
-	public void saveGame(Game currentGame, String path) throws FileNotFoundException, IOException {
+	public void saveGame(Game currentGame, String path) throws IOException {
 		if (!currentGame.isActive()) {
 			LocalDateTime time = currentGame.getTimeEnd();
 			games.put(time, currentGame);
