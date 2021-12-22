@@ -34,7 +34,7 @@ public class BullsAndCowsServerAppl {
         String basePackage = props.getProperty("base_package");
         String protocolName = props.getProperty("server_protocol");
 
-        applProtocol = new BullsAndCowsProtocol(BullsAndCowsOperationsImpl.getBullsAndCowsGame(FILE_PATH));
+        applProtocol = new BullsAndCowsProtocol(bullsAndCowsService);
 
         @SuppressWarnings("unchecked")
         Class<NetJavaServer> clazz = (Class<NetJavaServer>) Class.forName(basePackage + protocolName);
@@ -56,7 +56,7 @@ public class BullsAndCowsServerAppl {
         }));
         menuItems.add(Item.of("Shutdown server", t -> {
             server.shutdown();
-        }));
+        }, true));
         return menuItems;
     }
 

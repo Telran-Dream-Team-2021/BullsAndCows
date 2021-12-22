@@ -1,12 +1,17 @@
 package telran.bc.dto;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class Competition {
-    private Set<Long> users = new TreeSet<>();
+public class Competition implements Serializable{
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Set<Long> users = new TreeSet<>();
     private long startAt;
     private long finishAt;
     private String resultsPath;

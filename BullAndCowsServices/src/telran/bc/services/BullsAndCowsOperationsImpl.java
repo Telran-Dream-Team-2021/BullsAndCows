@@ -16,21 +16,32 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 
     private static final long serialVersionUID = 1L;
     private static final String FILE_PATH = "BCGameData.data";
-    private static final TreeMap<LocalDateTime, Competition> competitions = new TreeMap<>();
-    private static final HashMap<Long, User> users = new HashMap<>();
+    private final TreeMap<LocalDateTime, Competition> competitions = new TreeMap<>();
+    private final HashMap<Long, User> users = new HashMap<>();
     public static final String GAMES_COMPETITIONS_PATH = "games/competitions/";
     public static final String GAMES_TRAININGS_PATH = "games/trainings";
     public static final String GAME_HAS_NOT_BEEN_SAVED = "Game has not been saved";
-    private static HashMap<User, Game> currentGames = new HashMap<>();
+    private HashMap<User, Game> currentGames = new HashMap<>();
     CompetitionService competitionService = new CompetitionService();
 
     public static BullsAndCowsOperations getBullsAndCowsGame(String filePath) {
         try (ObjectInputStream reader = new ObjectInputStream(new FileInputStream(filePath))) {
-            return (BullsAndCowsOperationsImpl) reader.readObject();
+            System.out.println("old impl");
+            BullsAndCowsOperationsImpl res = (BullsAndCowsOperationsImpl) reader.readObject();
+            res.restarting();
+            return res;
         } catch (Exception e) {
+        	System.out.println(e.getMessage());
+        	System.out.println("new impl");
             return new BullsAndCowsOperationsImpl();
         }
     }
+
+    private void restarting() {
+    	competitionService = new CompetitionService();
+		competitions.entrySet().forEach(e-> competitionService.createCompetitionSwitchers(e.getValue(), this));
+		currentGames.entrySet().forEach(e->e.getValue().finishGame());
+	}
 
     @Override
     public boolean currentGameIsActive(long userId) {

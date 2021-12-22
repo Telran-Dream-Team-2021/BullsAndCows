@@ -10,8 +10,12 @@ import java.util.concurrent.TimeUnit;
 
 public class CompetitionService implements Serializable {
 
-    private final transient ScheduledExecutorService scheduler =
-            Executors.newScheduledThreadPool(10); // TODO change 2 to nThreads + 2
+    /**
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
+	private transient final ScheduledExecutorService scheduler =
+            Executors.newScheduledThreadPool(10);
 
     public void addGame(Game game, Long endTime, Thread threadUser) {
         GameFinisher finisher = createFinisher(game, threadUser);
