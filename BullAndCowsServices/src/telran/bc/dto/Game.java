@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class Game implements Serializable {
@@ -49,7 +50,7 @@ public class Game implements Serializable {
     }
 
     private String generateSecretNumber() {
-        String res = new Random()
+        String res = ThreadLocalRandom.current()
                 .ints(1, 10)
                 .distinct()
                 .limit(4)
