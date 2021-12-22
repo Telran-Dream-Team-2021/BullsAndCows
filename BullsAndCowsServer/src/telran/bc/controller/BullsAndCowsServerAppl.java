@@ -29,7 +29,7 @@ public class BullsAndCowsServerAppl {
         io = new ConsoleInputOutput();
 
         Properties props = new Properties();
-        props.load(new FileInputStream("./TcpJavaServer/application.properties"));
+        props.load(new FileInputStream("../TcpJavaServer/application.properties"));
         int port = Integer.parseInt(props.getProperty("port"));
         String basePackage = props.getProperty("base_package");
         String protocolName = props.getProperty("server_protocol");

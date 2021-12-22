@@ -31,9 +31,9 @@ public class User implements Serializable {
         return games.subMap(from, true, to.withSecond(59).withNano(999999999), true).entrySet().stream().map(e -> e.getValue()).toList();
     }
 
-    public Game startGame(String gamePath) {
+    public Game startGame() {
         System.out.println("new game created");
-        return new Game(++nonce, gamePath);
+        return new Game(++nonce);
     }
 
     public void saveGame(Game currentGame, String path) throws IOException {
