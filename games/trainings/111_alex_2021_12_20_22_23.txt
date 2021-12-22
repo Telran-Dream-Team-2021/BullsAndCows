@@ -1,0 +1,7 @@
+Your number - 3467; Bulls - 1, Cows - 1
+Your number - 34566; Bulls - 1, Cows - 1
+Your number - 0687; Bulls - 0, Cows - 1
+Your number - 3457; Bulls - 1, Cows - 1
+Your number - 7456; Bulls - 1, Cows - 0
+Your number - 1235; Bulls - 1, Cows - 0
+Your number - 8439; Bulls - 4, Cows - 0

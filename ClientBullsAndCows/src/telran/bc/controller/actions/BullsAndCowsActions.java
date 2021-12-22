@@ -11,99 +11,90 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import telran.bc.dto.Game;
-import telran.bc.dto.Move;
-import telran.bc.dto.MoveData;
-import telran.bc.dto.RegistrationToCompetitionData;
-import telran.bc.dto.SearchGameDataRequest;
-import telran.bc.dto.SearchGameDataResponce;
-import telran.bc.dto.UserCodes;
-import telran.bc.services.BullsAndCowsOperations;
-import telran.view.InputOutput;
-import terlan.view.Item;
-
 public class BullsAndCowsActions {
-	private static BullsAndCowsOperations bullsAndCowsService;
-	static long userId;
-	public static ArrayList<Item> getItems(BullsAndCowsOperations bullsAndCowsService, InputOutput io) {
-		BullsAndCowsActions.bullsAndCowsService = bullsAndCowsService;
-		return getMenu();
-	}
-	
-	private static ArrayList<Item> getMenu() {
-		ArrayList<Item> menuItems = new ArrayList<>();
-		menuItems.add(Item.of("Registration", t -> {
-			try {
-				registration(t);
-			} catch (Exception e) {
-				t.writeObjectLine(e.getMessage());
-			}
-		}));
-		menuItems.add(Item.of("Start new game", t -> {
-			try {
-				startGame(t);
-			} catch (Exception e) {
-				t.writeObjectLine(e.getMessage());
-			}
-		}));
-		menuItems.add(Item.of("Enter your number", t -> {
-			try {
-				move(t);
-			} catch (Exception e) {
-				t.writeObjectLine(e.getMessage());
-			}
-		}));
-		menuItems.add(Item.of("Search user's games", t -> {
-			try {
-				searchGames(t);
-			} catch (Exception e) {
-				t.writeObjectLine(e.getMessage());
-			}
-		}));
-		menuItems.add(Item.of("All user's games", t -> {
-			try {
-				getAllUserGames(t);
-			} catch (Exception e) {
-				t.writeObjectLine(e.getMessage());
-			}
-		}));
-		menuItems.add(Item.of("Registration to competition", t -> {
-			try {
-				registrationToCompetition(t);
-			} catch (Exception e) {
-				t.writeObjectLine(e.getMessage());
-			}
-		}));
-		menuItems.add(Item.of("Exit", e->{}, true));
+    static long userId;
+    private static BullsAndCowsOperations bullsAndCowsService;
+
+    public static ArrayList<Item> getItems(BullsAndCowsOperations bullsAndCowsService, InputOutput io) {
+        BullsAndCowsActions.bullsAndCowsService = bullsAndCowsService;
+        return getMenu();
+    }
+
+    private static ArrayList<Item> getMenu() {
+        ArrayList<Item> menuItems = new ArrayList<>();
+        menuItems.add(Item.of("Registration", t -> {
+            try {
+                registration(t);
+            } catch (Exception e) {
+                t.writeObjectLine(e.getMessage());
+            }
+        }));
+        menuItems.add(Item.of("Start new game", t -> {
+            try {
+                startGame(t);
+            } catch (Exception e) {
+                t.writeObjectLine(e.getMessage());
+            }
+        }));
+        menuItems.add(Item.of("Enter your number", t -> {
+            try {
+                move(t);
+            } catch (Exception e) {
+                t.writeObjectLine(e.getMessage());
+            }
+        }));
+        menuItems.add(Item.of("Search user's games", t -> {
+            try {
+                searchGames(t);
+            } catch (Exception e) {
+                t.writeObjectLine(e.getMessage());
+            }
+        }));
+        menuItems.add(Item.of("All user's games", t -> {
+            try {
+                getAllUserGames(t);
+            } catch (Exception e) {
+                t.writeObjectLine(e.getMessage());
+            }
+        }));
+        menuItems.add(Item.of("Registration to competition", t -> {
+            try {
+                registrationToCompetition(t);
+            } catch (Exception e) {
+                t.writeObjectLine(e.getMessage());
+            }
+        }));
+        menuItems.add(Item.of("Exit", e -> {
+        }, true));
 
         return menuItems;
     }
 
-	private static void registrationToCompetition(InputOutput io) throws Exception {
-		if(userId==0L) {
-			setUser(getId(io), io);
-		}
+    private static void registrationToCompetition(InputOutput io) throws Exception {
+        if (userId == 0L) {
+            setUser(getId(io), io);
+        }
 
-		List<LocalDateTime> competitions = bullsAndCowsService.getAllCompetitions();
+        List<LocalDateTime> competitions = bullsAndCowsService.getAllCompetitions();
 
-		if (competitions.size() == 0) {
-			throw new Exception("There are no scheduled competitions");
-		}
+        if (competitions.size() == 0) {
+            throw new Exception("There are no scheduled competitions");
+        }
 
-		StringBuilder variants = new StringBuilder("");
-		variants.append("Incoming competitions:\n");
-		for (int i = 0; i < competitions.size(); i++) {
-			variants.append(String.format("%d - %s\n", i + 1, competitions.get(i).toString()));
-		}
-		variants.append("Enter number of competition.\n");
+        StringBuilder variants = new StringBuilder("");
+        variants.append("Incoming competitions:\n");
+        for (int i = 0; i < competitions.size(); i++) {
+            variants.append(String.format("%d - %s\n", i + 1, competitions.get(i).toString()));
+        }
+        variants.append("Enter number of competition.\n");
 
-		int userChoiсe = io.readInt(variants.toString(), 1, competitions.size());
-		io.writeObjectLine(bullsAndCowsService.registerToCompetition(new RegistrationToCompetitionData(userId, competitions.get(userChoiсe - 1))));
-	}
+        int userChoiсe = io.readInt(variants.toString(), 1, competitions.size());
+        io.writeObjectLine(bullsAndCowsService.registerToCompetition(new RegistrationToCompetitionData(userId, competitions.get(userChoiсe - 1))));
+    }
 
-	private static void searchGames(InputOutput io) throws Exception {
-		SearchGameDataRequest gameDataRequest = new SearchGameDataRequest(getId(io), getDateFrom(io), getDateTo(io));
-		SearchGameDataResponce gameDataResponce = bullsAndCowsService.searchGames(gameDataRequest);
+    private static void searchGames(InputOutput io) throws Exception {
+        SearchGameDataRequest gameDataRequest = new SearchGameDataRequest(getId(io), getDateFrom(io), getDateTo(io));
+        SearchGameDataResponce gameDataResponce = bullsAndCowsService.searchGames(gameDataRequest);
 
         if (gameDataResponce.games.size() > 0) {
             displayGames(gameDataResponce, io);
@@ -236,5 +227,4 @@ public class BullsAndCowsActions {
     private static long getId(InputOutput io) {
         return io.readLong("Enter User Id");
     }
-
 }

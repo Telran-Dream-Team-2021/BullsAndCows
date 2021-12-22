@@ -1,29 +1,33 @@
 package telran.bc.services;
 
+import telran.bc.dto.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import telran.bc.dto.CompetitionCode;
-import telran.bc.dto.Move;
-import telran.bc.dto.MoveData;
-import telran.bc.dto.RegistrationToCompetitionData;
-import telran.bc.dto.SearchGameDataRequest;
-import telran.bc.dto.SearchGameDataResponce;
-import telran.bc.dto.User;
-import telran.bc.dto.UserCodes;
+public interface BullsAndCowsOperations {
+    UserCodes registration(long userId, String name) throws Exception;
 
-public interface BullsAndCowsOperations{
-	public UserCodes registration(long userId, String name) throws Exception;
-	public long start(long userId) throws Exception ;
-	public ArrayList<Move> move(MoveData moveData) throws Exception;
-	SearchGameDataResponce searchGames(SearchGameDataRequest gameData) throws Exception;
-	void save(String filePath) throws Exception;
-	public boolean currentGameIsActive(long userId) throws Exception;
-	public UserCodes checkUser(long userId) throws Exception;
-	public CompetitionCode createNewCompetition(LocalDateTime startAt, LocalDateTime finishAt, 
-			String resultsPath, int maxGameDuration);
-	public void clearCurrentGames();
-	public void deleteGame(User user);
-	public ArrayList<LocalDateTime> getAllCompetitions() throws Exception;
-	public CompetitionCode registerToCompetition(RegistrationToCompetitionData data) throws Exception;
+    long start(long userId) throws Exception;
+
+    ArrayList<Move> move(MoveData moveData) throws Exception;
+
+    SearchGameDataResponce searchGames(SearchGameDataRequest gameData) throws Exception;
+
+    void save(String filePath) throws Exception;
+
+    boolean currentGameIsActive(long userId) throws Exception;
+
+    UserCodes checkUser(long userId) throws Exception;
+
+    CompetitionCode createNewCompetition(LocalDateTime startAt, LocalDateTime finishAt,
+                                                String resultsPath, int maxGameDuration);
+
+    void clearCurrentGames();
+
+    void deleteGame(User user);
+
+    ArrayList<LocalDateTime> getAllCompetitions() throws Exception;
+
+    CompetitionCode registerToCompetition(RegistrationToCompetitionData data) throws Exception;
 }

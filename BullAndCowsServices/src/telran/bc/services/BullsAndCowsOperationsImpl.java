@@ -1,20 +1,22 @@
 package telran.bc.services;
 
-import java.io.*;
-import java.time.*;
-import java.util.*;
 import telran.bc.dto.*;
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.TreeMap;
 
 public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final String FILE_PATH = "BCGameData.data";
-    private static TreeMap<LocalDateTime, Competition> competitions = new TreeMap<>();
-    private static HashMap<Long, User> users = new HashMap<>();
-    CompetitionService competitionService = new CompetitionService();
+    private static final TreeMap<LocalDateTime, Competition> competitions = new TreeMap<>();
+    private static final HashMap<Long, User> users = new HashMap<>();
     private static HashMap<User, Game> currentGames = new HashMap<>();
-    private String prefix = "";
-
+    CompetitionService competitionService = new CompetitionService();
 
     public static BullsAndCowsOperations getBullsAndCowsGame(String filePath) {
         try (ObjectInputStream reader = new ObjectInputStream(new FileInputStream(filePath))) {
@@ -70,8 +72,8 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
             throw new IllegalArgumentException(
                     "This user in not finished game. Game ID - " + currentGames.get(currentUser).getGameId());
         }
-        validateBeforeCompetition(currentUser, game);
-        game = currentUser.startGame();
+        String gamePath = validateBeforeCompetition(currentUser, game);
+        game = currentUser.startGame(gamePath);
         currentGames.put(currentUser, game);
         try {
             save(FILE_PATH);
@@ -83,33 +85,28 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
         return game.getGameId();
     }
 
-    private void validateBeforeCompetition(User currentUser, Game game) {
+    private String validateBeforeCompetition(User currentUser, Game game) {
+        String prefix;
         LocalDateTime localDateTime = LocalDateTime.now();
         Competition currentComp = null;
         LocalDateTime key = competitions.ceilingKey(localDateTime);
-        System.out.print(key);
-        System.out.print(competitions.size() + "govno");
         if (competitions.size() > 0 && key != null) {
             currentComp = competitions.get(key);
-            System.out.println(currentComp);
         }
         if (currentComp != null && currentComp.isOnGoing()) {
-            System.out.println("done");
             if (currentComp.isOnCompetition(currentUser.getId())) {
-                prefix = "competitions/";
+                prefix = "games/competitions";
                 competitionService.addGame(
                         game,
                         currentComp.getMaxGameDuration(),
                         Thread.currentThread());
-                System.out.println("fuck0");
             } else {
-                System.out.println("fuck");
                 throw new IllegalStateException("Competition is in progress, you have to register first");
             }
-
         } else {
-            prefix = "games/";
+            prefix = "games/trainings";
         }
+        return prefix;
     }
 
     @Override
@@ -131,7 +128,7 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
 
         if (!game.isActive()) {
             try {
-                currentUser.saveGame(game, getSavePath());
+                currentUser.saveGame(game, game.getGamePath());
                 Thread.currentThread().sleep(1);
             } catch (Exception e) {
                 System.out.println("didn't save game ID-" + game.getGameId());
@@ -140,11 +137,6 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
         }
 
         return game.getMoves();
-    }
-
-    private String getSavePath() {
-        return prefix;
-//		return "./games/competition123"; //for test purposes
     }
 
     @Override
@@ -177,40 +169,40 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
         currentGames.remove(user);
     }
 
-	public CompetitionCode createNewCompetition(LocalDateTime startAt, LocalDateTime finishAt, 
-			String resultsPath, int maxGameDuration) {
-		
-		long startAtSeconds = localDateToLong(startAt);
-		long finishAtSeconds = localDateToLong(finishAt);
-		
-		if(startAtSeconds>finishAtSeconds) {
-			throw new IllegalArgumentException("startAt cannot be more than finishAt");
-		}
+    public CompetitionCode createNewCompetition(LocalDateTime startAt, LocalDateTime finishAt,
+                                                String resultsPath, int maxGameDuration) {
 
-		if(startAtSeconds<localDateToLong(LocalDateTime.now())) {
-			throw new IllegalArgumentException("startAt cannot be less than time now");
-		}
-		
-		Competition comp = new Competition(startAtSeconds, finishAtSeconds, resultsPath,
-				maxGameDuration);
-		var res = competitions.putIfAbsent(finishAt, comp);
-		competitionService.createCompetitionSwitchers(comp, this);
-		return res == null ? CompetitionCode.CREATED : CompetitionCode.ALREADY_EXISTS;
+        long startAtSeconds = localDateToLong(startAt);
+        long finishAtSeconds = localDateToLong(finishAt);
 
-	}
-	
-	private long localDateToLong(LocalDateTime ldt) {
-		ZonedDateTime zdt = ZonedDateTime.of(ldt, ZoneId.systemDefault());
-		return zdt.toInstant().getEpochSecond();
-	}
+        if (startAtSeconds > finishAtSeconds) {
+            throw new IllegalArgumentException("startAt cannot be more than finishAt");
+        }
 
-	@Override
-	public ArrayList<LocalDateTime> getAllCompetitions() {
-		return new ArrayList<LocalDateTime>(competitions.keySet().stream().filter(k -> k.compareTo(LocalDateTime.now()) > 0).toList());
-	}
+        if (startAtSeconds < localDateToLong(LocalDateTime.now())) {
+            throw new IllegalArgumentException("startAt cannot be less than time now");
+        }
 
-	@Override
-	public CompetitionCode registerToCompetition(RegistrationToCompetitionData data) throws Exception {
-		return competitions.get(data.competitionKey).registerUser(data.userId);
-	}
+        Competition comp = new Competition(startAtSeconds, finishAtSeconds, resultsPath,
+                maxGameDuration);
+        var res = competitions.putIfAbsent(finishAt, comp);
+        competitionService.createCompetitionSwitchers(comp, this);
+        return res == null ? CompetitionCode.CREATED : CompetitionCode.ALREADY_EXISTS;
+
+    }
+
+    private long localDateToLong(LocalDateTime ldt) {
+        ZonedDateTime zdt = ZonedDateTime.of(ldt, ZoneId.systemDefault());
+        return zdt.toInstant().getEpochSecond();
+    }
+
+    @Override
+    public ArrayList<LocalDateTime> getAllCompetitions() {
+        return new ArrayList<>(competitions.keySet().stream().filter(k -> k.compareTo(LocalDateTime.now()) > 0).toList());
+    }
+
+    @Override
+    public CompetitionCode registerToCompetition(RegistrationToCompetitionData data) throws Exception {
+        return competitions.get(data.competitionKey).registerUser(data.userId);
+    }
 }

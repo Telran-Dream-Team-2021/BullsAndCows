@@ -1,0 +1,10 @@
+Your number - dfgf; Bulls - 0, Cows - 0
+Your number - 43645; Bulls - 0, Cows - 1
+Your number - 7534; Bulls - 0, Cows - 1
+Your number - ; Bulls - 0, Cows - 0
+Your number - 4536; Bulls - 0, Cows - 2
+Your number - 3457; Bulls - 1, Cows - 0
+Your number - 8576; Bulls - 0, Cows - 3
+Your number - ; Bulls - 0, Cows - 0
+Your number - 3457; Bulls - 1, Cows - 0
+Your number - 9658; Bulls - 4, Cows - 0
