@@ -42,14 +42,16 @@ public class Menu implements Item {
 				} catch(Exception e) {}
 				
 				item.perform(io);
-				displayTitle(io);
-				displayItems(io);
 				if(item.isExit()) {
+					System.out.println("break");
 					break;
 				}
+				displayTitle(io);
+				displayItems(io);
+				
 			} catch(EndOfInputException e) {
-				if(!io.readString("Do you wonna exit? [y/n]").equals("n")) {
-					throw e;
+				if(io.readString("Do you wonna exit? [y/n]").equals("y")) {
+					break;
 				}
 			}
 		}

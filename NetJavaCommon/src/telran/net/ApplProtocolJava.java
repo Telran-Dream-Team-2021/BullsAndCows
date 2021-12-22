@@ -1,5 +1,8 @@
 package telran.net;
-import telran.net.dto.*;
+
+import telran.net.dto.RequestJava;
+import telran.net.dto.ResponseJava;
+
 public interface ApplProtocolJava {
-	public ResponseJava getResponse(RequestJava request);
+    ResponseJava getResponse(RequestJava request);
 }
