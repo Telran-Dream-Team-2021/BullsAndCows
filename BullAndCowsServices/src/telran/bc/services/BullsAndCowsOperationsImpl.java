@@ -23,7 +23,6 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
             System.out.println("old impl");
             BullsAndCowsOperationsImpl res = (BullsAndCowsOperationsImpl) reader.readObject();
             res.restarting();
-//            System.out.println(res.users.size());
             return res;
         } catch (Exception e) {
         	System.out.println(e.getMessage());

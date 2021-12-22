@@ -56,7 +56,7 @@ public class BullsAndCowsServerAppl {
         }));
         menuItems.add(Item.of("Shutdown server", t -> {
             server.shutdown();
-        }));
+        }, true));
         return menuItems;
     }
 
