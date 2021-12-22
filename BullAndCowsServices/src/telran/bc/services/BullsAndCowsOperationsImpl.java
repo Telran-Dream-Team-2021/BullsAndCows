@@ -2,6 +2,9 @@ package telran.bc.services;
 
 import telran.bc.dto.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -15,6 +18,9 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
     private static final String FILE_PATH = "BCGameData.data";
     private static final TreeMap<LocalDateTime, Competition> competitions = new TreeMap<>();
     private static final HashMap<Long, User> users = new HashMap<>();
+    public static final String GAMES_COMPETITIONS_PATH = "games/competitions/";
+    public static final String GAMES_TRAININGS_PATH = "games/trainings";
+    public static final String GAME_HAS_NOT_BEEN_SAVED = "Game has not been saved";
     private static HashMap<User, Game> currentGames = new HashMap<>();
     CompetitionService competitionService = new CompetitionService();
 
@@ -47,7 +53,7 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
             save(FILE_PATH);
             System.out.printf("New user created: Name-%s, ID-%d", name, userId);
         } catch (Exception e) {
-            System.out.println("Game has not been saved");
+            System.out.println(GAME_HAS_NOT_BEEN_SAVED);
         }
         return UserCodes.OK;
     }
@@ -80,7 +86,7 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
             System.out.printf("New game was created! GameID-%d", game.getGameId());
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("game has not been saved");
+            System.out.println(GAME_HAS_NOT_BEEN_SAVED);
         }
         return game.getGameId();
     }
@@ -95,7 +101,8 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
         }
         if (currentComp != null && currentComp.isOnGoing()) {
             if (currentComp.isOnCompetition(currentUser.getId())) {
-                prefix = "games/competitions";
+                prefix = GAMES_COMPETITIONS_PATH + currentComp.getResultsPath();
+                validatePath(prefix);
                 competitionService.addGame(
                         game,
                         currentComp.getMaxGameDuration(),
@@ -104,9 +111,17 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
                 throw new IllegalStateException("Competition is in progress, you have to register first");
             }
         } else {
-            prefix = "games/trainings";
+            prefix = GAMES_TRAININGS_PATH;
+            validatePath(prefix);
         }
         return prefix;
+    }
+
+    private void validatePath(String prefix) {
+        Path path = Paths.get(prefix);
+        if (!Files.exists(path)) {
+         new File(prefix).mkdir();
+       }
     }
 
     @Override
@@ -122,7 +137,7 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
         try {
             save(FILE_PATH);
         } catch (Exception e) {
-            System.out.println("game has not been saved");
+            System.out.println(GAME_HAS_NOT_BEEN_SAVED);
             System.out.println(e.getMessage());
         }
 
@@ -153,7 +168,7 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
     public void save(String filePath) throws Exception {
         try (ObjectOutputStream writer = new ObjectOutputStream(new FileOutputStream(filePath))) {
             writer.writeObject(this);
-            System.out.println("game data has been saved");
+            System.out.println("GameData has been saved");
         }
     }
 
