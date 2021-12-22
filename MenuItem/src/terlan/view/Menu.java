@@ -50,8 +50,8 @@ public class Menu implements Item {
 				displayItems(io);
 				
 			} catch(EndOfInputException e) {
-				if(!io.readString("Do you wonna exit? [y/n]").equals("n")) {
-					throw e;
+				if(io.readString("Do you wonna exit? [y/n]").equals("y")) {
+					break;
 				}
 			}
 		}
