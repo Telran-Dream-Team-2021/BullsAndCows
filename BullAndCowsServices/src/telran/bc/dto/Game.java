@@ -13,16 +13,15 @@ public class Game implements Serializable {
     private final ArrayList<Move> moves;
     private final String secretNumber;
     private final long gameId;
-    private final String gamePath;
+    private String gamePath;
     private boolean active;
     private LocalDateTime timeEnd;
 
-    public Game(long gameId, String gamePath) {
+    public Game(long gameId) {
         this.secretNumber = generateSecretNumber();
         this.active = true;
         this.gameId = gameId;
         this.moves = new ArrayList<>();
-        this.gamePath = gamePath;
     }
 
     public String getGamePath() {
@@ -96,4 +95,10 @@ public class Game implements Serializable {
         active = false;
         timeEnd = LocalDateTime.now();
     }
+
+	public void setGamePath(String gamePath) {
+		this.gamePath = gamePath;
+	}
+    
+    
 }

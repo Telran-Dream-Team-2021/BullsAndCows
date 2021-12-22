@@ -78,8 +78,9 @@ public class BullsAndCowsOperationsImpl implements BullsAndCowsOperations, Seria
             throw new IllegalArgumentException(
                     "This user in not finished game. Game ID - " + currentGames.get(currentUser).getGameId());
         }
+        game = currentUser.startGame();
         String gamePath = validateBeforeCompetition(currentUser, game);
-        game = currentUser.startGame(gamePath);
+        game.setGamePath(gamePath);
         currentGames.put(currentUser, game);
         try {
             save(FILE_PATH);
