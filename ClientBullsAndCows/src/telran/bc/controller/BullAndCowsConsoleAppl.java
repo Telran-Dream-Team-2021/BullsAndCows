@@ -20,7 +20,7 @@ public class BullAndCowsConsoleAppl {
         Properties props = new Properties();
 
         try {
-            props.load(new FileInputStream("./TcpJavaServer/application.properties"));
+            props.load(new FileInputStream("../TcpJavaServer/application.properties"));
             String host = props.getProperty("host");
             int port = Integer.parseInt(props.getProperty("port"));
             String basePackage = props.getProperty("base_package");
