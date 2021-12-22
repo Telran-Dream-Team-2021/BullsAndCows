@@ -18,6 +18,7 @@ worklogs/
 *.DS_Store
 /.idea
 *.iml
+/games/
 
 # External tool builders
 .externalToolBuilders/
