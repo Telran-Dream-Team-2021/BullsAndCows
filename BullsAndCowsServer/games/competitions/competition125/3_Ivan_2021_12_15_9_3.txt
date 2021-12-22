@@ -1,0 +1,10 @@
+Your number - 1234; Bulls - 1, Cows - 2
+Your number - 1ttt; Bulls - 0, Cows - 1
+Your number - t1tt; Bulls - 0, Cows - 1
+Your number - tt1t; Bulls - 1, Cows - 0
+Your number - 2t1t; Bulls - 1, Cows - 1
+Your number - t21t; Bulls - 2, Cows - 0
+Your number - 321t; Bulls - 2, Cows - 1
+Your number - 5213; Bulls - 3, Cows - 0
+Your number - 5213; Bulls - 3, Cows - 0
+Your number - 6213; Bulls - 4, Cows - 0
