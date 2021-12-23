@@ -12,7 +12,7 @@ import terlan.view.Menu;
 
 public class BullsAndCowsStatisticsAppl {
 	private static final String CONFIG_PATH = "./config.properties";
-	private static final String DEFAULT_COMPETITION_PATH = "./config.properties";
+	private static final String DEFAULT_COMPETITION_PATH = "../games/competitions";
 
 	public static void main(String[] args) {
 		Properties props = new Properties();
@@ -21,12 +21,12 @@ public class BullsAndCowsStatisticsAppl {
 			props.load(new FileReader(CONFIG_PATH));
 			path = props.getProperty("competitionsPath");
 		} catch (Exception e) {
-			path = "./games/competitions";
+			path = DEFAULT_COMPETITION_PATH;
 			e.printStackTrace();
 		}
 		InputOutput io = new ConsoleInputOutput();
 		BullsAndCowsStatisticsServices service =
-				new BullsAndCowsStatisticsServices("../BullsAndCowsServer/games/competitions");
+				new BullsAndCowsStatisticsServices(path);
 		Menu menu = new Menu("Bulls and cows competitions statistics",
 				BullAndCowsStatisticsActions.getItems(io, service));
 		

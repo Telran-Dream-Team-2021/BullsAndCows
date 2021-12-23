@@ -24,9 +24,13 @@ public class BullAndCowsStatisticsActions {
 	
 	private static void showAllCompetitions(InputOutput io) {
 		List<String> competitionNames = service.getAllCompetitionNames();
-		int competitionIndex =  io.readInt(getCompetitionLine(competitionNames), 1, competitionNames.size()) - 1;
-		CompetitionResult competitionResult = service.getCompetitionResult(competitionIndex);
-		displayCompetitionResult(competitionResult, io);
+		if (competitionNames.size() > 0) {
+			int competitionIndex = io.readInt(getCompetitionLine(competitionNames), 1, competitionNames.size()) - 1;
+			CompetitionResult competitionResult = service.getCompetitionResult(competitionIndex);
+			displayCompetitionResult(competitionResult, io);
+		} else {
+			io.writeObjectLine("No finnished competiton yet");
+		}
 	}
 
 	private static void displayCompetitionResult(CompetitionResult competitionResult, InputOutput io) {
